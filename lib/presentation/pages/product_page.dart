@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../viewmodels/product_viewmodel.dart';
 import '../viewmodels/product_state.dart';
+import 'product_detail_page.dart';
 
 class ProductPage extends StatelessWidget {
   final ProductViewModel viewModel;
@@ -36,6 +37,17 @@ class ProductPage extends StatelessWidget {
                 leading: Image.network(product.image),
                 title: Text(product.title),
                 subtitle: Text("\$${product.price}"),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) =>
+                          ProductDetailPage(
+                            product: product,
+                          ),
+                    ),
+                  );
+                },
               );
             },
           );
