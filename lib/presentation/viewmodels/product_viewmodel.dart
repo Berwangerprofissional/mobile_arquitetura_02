@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../domain/repositories/product_repository.dart';
 import 'product_state.dart';
+import '../../domain/entities/product.dart';
 
 class ProductViewModel {
   final ProductRepository repository;
@@ -26,5 +27,73 @@ class ProductViewModel {
         error: e.toString(),
       );
     }
+  }
+
+  Future<void> deleteProduct(int id) async {
+
+    await repository.deleteProduct(id);
+
+    final updatedList =
+        state.value.products.where((product) {
+
+      return product.id != id;
+
+    }).toList();
+
+    state.value = state.value.copyWith(
+      products: updatedList,
+    );
+  }
+
+  Future<void> updateProduct(
+    Product updatedProduct,
+  ) async {
+
+    await repository.updateProduct(
+      updatedProduct,
+    );
+
+    final updatedList =
+        state.value.products.map((product) {
+
+      if (product.id == updatedProduct.id) {
+
+        return updatedProduct;
+      }
+
+      return product;
+
+    }).toList();
+
+    state.value = state.value.copyWith(
+      products: updatedList,
+    );
+  }
+
+  Future<void> addProduct(
+      Product product,
+    ) async {
+    
+      await repository.addProduct(product);
+  
+      final updatedList = [
+        ...state.value.products,
+        product,
+      ];
+  
+      state.value = state.value.copyWith(
+        products: updatedList,
+      );
+    }
+  
+    void toggleFavorite(Product product) {
+    
+    product.favorite = !product.favorite;
+  
+    state.value = state.value.copyWith(
+      products: List.from(
+        state.value.products,
+      ),
+    );
   }
 }

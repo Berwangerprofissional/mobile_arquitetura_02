@@ -5,11 +5,15 @@ class Product {
   final String image;
   final String description;
 
-  const Product({
+  bool favorite;
+
+  Product({
     required this.id,
     required this.title,
     required this.price,
     required this.image,
     required this.description,
+
+    this.favorite = false,
   });
 }
