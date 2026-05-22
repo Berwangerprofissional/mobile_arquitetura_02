@@ -30,14 +30,16 @@ class ProductViewModel {
   }
 
   Future<void> deleteProduct(int id) async {
+    try {
+      // Tenta apagar do servidor DummyJSON
+      await repository.deleteProduct(id);
+    } catch (_) {
+      // Ignora erros de rede (como 404 para IDs criados localmente que não existem no servidor real)
+    }
 
-    await repository.deleteProduct(id);
-
-    final updatedList =
-        state.value.products.where((product) {
-
+    // Executa a remoção local obrigatoriamente para manter o app fluído
+    final updatedList = state.value.products.where((product) {
       return product.id != id;
-
     }).toList();
 
     state.value = state.value.copyWith(
@@ -45,24 +47,20 @@ class ProductViewModel {
     );
   }
 
-  Future<void> updateProduct(
-    Product updatedProduct,
-  ) async {
+  Future<void> updateProduct(Product updatedProduct) async {
+    try {
+      // Tenta atualizar no servidor DummyJSON
+      await repository.updateProduct(updatedProduct);
+    } catch (_) {
+      // Ignora erros de rede para IDs criados localmente
+    }
 
-    await repository.updateProduct(
-      updatedProduct,
-    );
-
-    final updatedList =
-        state.value.products.map((product) {
-
+    // Executa a atualização local obrigatoriamente na lista em tela
+    final updatedList = state.value.products.map((product) {
       if (product.id == updatedProduct.id) {
-
         return updatedProduct;
       }
-
       return product;
-
     }).toList();
 
     state.value = state.value.copyWith(
@@ -70,30 +68,28 @@ class ProductViewModel {
     );
   }
 
-  Future<void> addProduct(
-      Product product,
-    ) async {
-    
+  Future<void> addProduct(Product product) async {
+    try {
       await repository.addProduct(product);
-  
-      final updatedList = [
-        ...state.value.products,
-        product,
-      ];
-  
-      state.value = state.value.copyWith(
-        products: updatedList,
-      );
+    } catch (_) {
+      // Proteção de rede
     }
   
-    void toggleFavorite(Product product) {
-    
+    final updatedList = [
+      ...state.value.products,
+      product,
+    ];
+  
+    state.value = state.value.copyWith(
+      products: updatedList,
+    );
+  }
+  
+  void toggleFavorite(Product product) {
     product.favorite = !product.favorite;
   
     state.value = state.value.copyWith(
-      products: List.from(
-        state.value.products,
-      ),
+      products: List.from(state.value.products),
     );
   }
 }

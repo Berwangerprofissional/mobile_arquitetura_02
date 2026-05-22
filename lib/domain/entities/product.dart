@@ -16,4 +16,15 @@ class Product {
 
     this.favorite = false,
   });
+  
+  Product copyWith({bool? favorite}) {
+    return Product(
+      id: id,
+      title: title,
+      price: price,
+      description: description,
+      image: image,
+      favorite: favorite ?? this.favorite,
+    );
+  }
 }
