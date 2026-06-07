@@ -20,7 +20,7 @@ class ProductFormPage extends StatefulWidget {
 }
 
 class _ProductFormPageState
-    extends State<ProductFormPage> {
+      extends State<ProductFormPage> {
 
   final titleController =
       TextEditingController();
@@ -29,6 +29,9 @@ class _ProductFormPageState
       TextEditingController();
 
   final descriptionController =
+      TextEditingController();
+
+  final imageController =
       TextEditingController();
 
   @override
@@ -45,6 +48,9 @@ class _ProductFormPageState
 
       descriptionController.text =
           widget.product!.description;
+      
+      imageController.text =
+          widget.product!.image;
     }
   }
 
@@ -95,6 +101,16 @@ class _ProductFormPageState
               ),
             ),
 
+            TextField(
+              controller: 
+                imageController,
+
+              decoration: 
+                  const InputDecoration(
+                labelText: 'URL da imagem',
+              ),
+            ),
+
             const SizedBox(height: 20),
 
             ElevatedButton(
@@ -114,7 +130,7 @@ class _ProductFormPageState
                   description:
                       descriptionController.text,
 
-                  image: widget.product?.image ?? '',
+                  image: imageController.text,
                 );
 
                 if (widget.product != null) {                                
